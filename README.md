@@ -11,6 +11,6 @@ code used: usearch.sh
 code used: dada2.R submitted on the cluster via submit.dada2.pbs. 
            This also accesses add.blast.sh to get results that only
            were classified as "Bacteria" or less
-           
-
+#### 4. Separate Archae/Bacteria for separate analyses
+code used: archae.sh
 
