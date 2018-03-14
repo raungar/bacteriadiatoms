@@ -13,4 +13,5 @@ code used: dada2.R submitted on the cluster via submit.dada2.pbs.
            were classified as "Bacteria" or less
 #### 4. Separate Archae/Bacteria for separate analyses
 code used: archae.sh
-
+#### 5. Make matrix needed for further analyses
+code used: make.matrix.sh
