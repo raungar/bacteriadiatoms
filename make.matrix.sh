@@ -1,28 +1,17 @@
 #!/bin/bash
 
-
-#cat DadaOutputGG/* | wc -l
-#awk '{print $6}' DadaOutputGG/* | sed '1d' | sort -u > bac.cols.order.txt
-#awk '{print $7}' DadaOutputGG/* | sed '1d' | sort -u > bac.cols.family.txt
-#awk '{print $8}' DadaOutputGG/* | sed '1d' | sort -u > bac.cols.genus.txt
-
-#printf "bacteria\t"
-# awk -vRS="\n" -vORS="\t" '1' bac.cols.order.txt
-#tr "\n" "\t" < bac.cols.order.txt
-#printf "\n"
-
-
 for ArchaeType in Archae Archaeless
 do
 num=5
-for level in order family genus
+for level in order family genus species
 do
 	echo "$ArchaeType - $level"
 	num=`expr $num + 1`
-	awk -v num="$num" '{print $num}' $ArchaeType/* | sed '1d' | sort -u > bac.cols.$level.txt
-	printf "bacteria\t" > matrix.$ArchaeType.$level.txt
-	awk -vRS="\n" -vORS="\t" '1' bac.cols.$level.txt >> matrix.$ArchaeType.$level.txt
-	printf "\n" >> matrix.$ArchaeType.$level.txt
+	awk -v num="$num" '{print $num}' $ArchaeType/* | sed '1d' | sort -u > MatrixOutput/bac.cols.$ArchaeType.$level.txt
+	printf "bacteria\t" > MatrixOutput/matrix.$ArchaeType.$level.txt
+	awk -vRS="\n" -vORS="\t" '1' MatrixOutput/bac.cols.$ArchaeType.$level.txt >> MatrixOutput/matrix.$ArchaeType.$level.txt
+	printf "\n" >> MatrixOutput/matrix.$ArchaeType.$level.txt
+
 
 	for file in $(ls $ArchaeType/)
 	do
@@ -49,10 +38,11 @@ do
 
         		printf  "$count\t"
 
-		done <bac.cols.$level.txt
+		done <MatrixOutput/bac.cols.$ArchaeType.$level.txt
 		echo ""
 		rm hash.temp.txt
-	done >> matrix.$ArchaeType.$level.txt
+	done >> MatrixOutput/matrix.$ArchaeType.$level.txt
+
 done
 
 done
