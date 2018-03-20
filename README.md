@@ -14,4 +14,4 @@ code used: dada2.R submitted on the cluster via submit.dada2.pbs.
 #### 4. Separate Archae/Bacteria for separate analyses
 code used: archae.sh
 #### 5. Make matrix needed for further analyses
-code used: make.matrix.sh (get rid of specific diatoms: for file in $(ls *); do awk '$1 != "R2" && $1 != "R37"' $file > "removed.$file"; done)
+code used: make.matrix.sh and make.matrix.species.sh (get rid of specific diatoms: for file in $(ls *); do awk '$1 != "R2" && $1 != "R37"' $file > "removed.$file"; done)
