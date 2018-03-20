@@ -5,7 +5,7 @@
 for ArchaeType in Archae Archaeless
 do
 num=5 #this is which column will be awk-ed for order/family/genus/species
-for level in order family genus species
+for level in order family genus
 do
 	echo "$ArchaeType - $level"
 	num=`expr $num + 1` #change taxonomic level
