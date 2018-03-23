@@ -27,4 +27,6 @@ ssu-mask BacteriaSSU
 ssu-mask --stk2afa BacteriaSSU   
 ssu-draw BacteriaSSU/   
 #### 2. Convert to fasta format
-https://gist.github.com/mkuhn/553217
+https://gist.github.com/mkuhn/553217    
+awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < BacteriaSSU/BacteriaSSU.bacteria.mask.fasta > BacteriaSSU/BacteriaSSU.bacteria.mask.single.fasta #convert multiple to single lines
+
