@@ -15,3 +15,16 @@ code used: dada2.R submitted on the cluster via submit.dada2.pbs.
 code used: archae.sh
 #### 5. Make matrix needed for further analyses
 code used: make.matrix.sh and make.matrix.species.sh (get rid of specific diatoms: for file in $(ls *); do awk '$1 != "R2" && $1 != "R37"' $file > "removed.$file"; done)
+#### 5. Analyze using NMDS
+code used: community.matrices.R
+   
+       
+
+### **bacterial tree formation**
+#### 1. Use ssu-align
+code used: ssu-align bacteria.all.formatted.fasta BacteriaSSU   
+ssu-mask BacteriaSSU   
+ssu-mask --stk2afa BacteriaSSU   
+ssu-draw BacteriaSSU/   
+#### 2. Convert to fasta format
+https://gist.github.com/mkuhn/553217
