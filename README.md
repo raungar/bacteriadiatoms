@@ -31,3 +31,5 @@ https://gist.github.com/mkuhn/553217
 awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < BacteriaSSU/BacteriaSSU.bacteria.mask.fasta > BacteriaSSU/BacteriaSSU.bacteria.mask.single.fasta #convert multiple to single lines
 #### 3. Make tree using FastTree
 FastTree -gtr -nt SSU2/SSU2.bacteria.mask.phylip > tree_bacteria_file
+#### 4. Plot tree and analysis
+code used: picante.R
