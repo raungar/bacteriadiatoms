@@ -29,5 +29,5 @@ ssu-draw BacteriaSSU/
 #### 2. Convert to fasta format
 https://gist.github.com/mkuhn/553217    
 awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < BacteriaSSU/BacteriaSSU.bacteria.mask.fasta > BacteriaSSU/BacteriaSSU.bacteria.mask.single.fasta #convert multiple to single lines
-#### 3. Make tree on trestles using RAxML
-code used: raxmlHPC-SSE3 -s result.phylips -n archaea -m GTRGAMMA -p $((1 + RANDOM % 100)) -w /home/raungar/a.test
+#### 3. Make tree using FastTree
+FastTree -gtr -nt SSU2/SSU2.bacteria.mask.phylip > tree_bacteria_file
