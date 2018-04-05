@@ -24,10 +24,11 @@ code used: community.matrices.R
 #### 1. Get all bacteria and archaea only (remove eukaryotes)
 code used: cat DadaOutputGG2/* | grep -v Bacteria |  awk -F'\t' '{print $1}' > ../aja_filter_from_bacterial_16S.list   
 cat DadaOutputGG2/* | grep -v Archaea |  awk -F'\t' '{print $1}' > aja_filter_from_archaea_16S.list    
-python aja_filter_fasta_from_list.py all.usearch.fasta aja_filter_from_bacteria_16S.list > bacteria.all.fasta    
-python aja_filter_fasta_from_list.py all.usearch.fasta aja_filter_from_archaea_16S.list > archaea.all.fasta     
+python aja_filter_fasta_from_list.py all.usearch.fasta aja_filter_from_bacteria_16S.list > archaea.all.fasta    
+python aja_filter_fasta_from_list.py all.usearch.fasta aja_filter_from_archaea_16S.list > bacteria.all.fasta   
+cat archaea.all.fasta bacteria.all.fasta > combined.all.fasta    
 #### 2. Use ssu-align
-code used: ssu-align bacteria.all.formatted.fasta BacteriaSSU   
+code used: ssu-align combined.all.fasta BacteriaSSU   
 ssu-mask BacteriaSSU   
 ssu-mask --stk2afa BacteriaSSU   
 ssu-draw BacteriaSSU/   
