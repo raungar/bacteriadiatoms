@@ -21,15 +21,20 @@ code used: community.matrices.R
        
 
 ### **bacterial tree formation**
-#### 1. Use ssu-align
+#### 1. Get all bacteria and archaea only (remove eukaryotes)
+code used: cat DadaOutputGG2/* | grep -v Bacteria |  awk -F'\t' '{print $1}' > ../aja_filter_from_bacterial_16S.list   
+cat DadaOutputGG2/* | grep -v Archaea |  awk -F'\t' '{print $1}' > aja_filter_from_archaea_16S.list    
+python aja_filter_fasta_from_list.py all.usearch.fasta aja_filter_from_bacteria_16S.list > bacteria.all.fasta    
+python aja_filter_fasta_from_list.py all.usearch.fasta aja_filter_from_archaea_16S.list > archaea.all.fasta     
+#### 2. Use ssu-align
 code used: ssu-align bacteria.all.formatted.fasta BacteriaSSU   
 ssu-mask BacteriaSSU   
 ssu-mask --stk2afa BacteriaSSU   
 ssu-draw BacteriaSSU/   
-#### 2. Convert to fasta format
+#### 3. Convert to fasta format
 https://gist.github.com/mkuhn/553217    
 awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < BacteriaSSU/BacteriaSSU.bacteria.mask.fasta > BacteriaSSU/BacteriaSSU.bacteria.mask.single.fasta #convert multiple to single lines
-#### 3. Make tree using FastTree
+#### 4. Make tree using FastTree
 FastTree -gtr -nt SSU2/SSU2.bacteria.mask.phylip > tree_bacteria_file
-#### 4. Plot tree and analysis
+#### 5. Plot tree and analysis
 code used: picante.R
