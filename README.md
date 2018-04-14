@@ -27,16 +27,18 @@ cat DadaOutputGG2/* | grep -v Archaea |  awk -F'\t' '{print $1}' > aja_filter_fr
 python aja_filter_fasta_from_list.py all.usearch.fasta aja_filter_from_bacteria_16S.list > archaea.all.fasta    
 python aja_filter_fasta_from_list.py all.usearch.fasta aja_filter_from_archaea_16S.list > bacteria.all.fasta   
 cat archaea.all.fasta bacteria.all.fasta > combined.all.fasta    
-#### 2. Use ssu-align
+#### 2. Reduce redundancy for tree via cd-hit
+code used: cdhit-4.6.8/cd-hit -i combined.all.fasta -o cdhitall -c 0.99    
+#### 3. Use ssu-align
 code used: ssu-align combined.all.fasta BacteriaSSU   
 ssu-mask BacteriaSSU   
 ssu-mask --stk2afa BacteriaSSU   
 ssu-draw BacteriaSSU/   
-#### 3. Convert to phylip format
+#### 4. Convert to phylip format
 from Bio import AlignIO
 alignment = AlignIO.read("BacteriaSSU3/BacteriaSSU3.bacteria.mask.stk", "stockholm")
 print(alignment.format("phylip-relaxed"))
-#### 4. Make tree using FastTree
+#### 5. Make tree using FastTree
 FastTree -gtr -nt SSU2/SSU2.bacteria.mask.phylip > tree_bacteria_file
-#### 5. Plot tree and analysis
+#### 6. Plot tree and analysis
 code used: picante.R
