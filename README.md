@@ -28,7 +28,10 @@ python aja_filter_fasta_from_list.py all.usearch.fasta aja_filter_from_bacteria_
 python aja_filter_fasta_from_list.py all.usearch.fasta aja_filter_from_archaea_16S.list > bacteria.all.fasta   
 cat archaea.all.fasta bacteria.all.fasta > combined.all.fasta    
 #### 2. Reduce redundancy for tree via cd-hit
-code used: cdhit-4.6.8/cd-hit -i combined.all.fasta -o cdhitall -c 0.99    
+code used: cdhit-4.6.8/cd-hit -i combined.all.fasta -o cdhitall -c 0.99 
+cat DadaOutputGG2/* > both.classification.txt
+./elongate.name.sh > combined.all.named.fixed.fasta; cat combined.all.named.fixed.fasta | sed 's/'"${TAB}"'/-/g' | sed 's/ /_/g' > combined.all.named.fixed.fasta combined.all.named.fixed.fasta #last bit just fixes formatting for cd-hit
+ cdhit-4.6.8/cd-hit -i combined.all.named.fixed.fasta -o cdhitnamed -c 0.99 -d 75 
 #### 3. Use ssu-align
 code used: ssu-align combined.all.fasta BacteriaSSU   
 ssu-mask BacteriaSSU   
