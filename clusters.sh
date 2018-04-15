@@ -8,12 +8,10 @@ do
 		#and it's read through at least one
 		if [[ $max_line != *"*"* ]] && [[ $count -gt 1 ]]
 		then
-			swap1=$(echo $max_line | awk -F "-" '{print $1}' | awk -F ">" '{print $2}')
-			swap2=$(echo $max_line | awk -F "-" '{print $2}')
-			echo -n "$swap1 " #then print column in a way that will match with main cd-hit file
-			echo -n "$swap2"
+			chosen1=$(echo $chosen_line | awk -F "-" '{print $1}' | awk -F ">" '{print $2}')
+			chosen2=$(echo $chosen_line | awk -F "-" '{print $2}') #then print column in a way that will match with main cd-hit file
 			printf "\t"			
-			echo $swap1"-"$swap2"-"$max_name #and print what you will want it to swap with
+			echo $chosen1"-"$chosen2"-"$max_name #and print what you will want it to swap with
 			
 		fi
 		
@@ -23,7 +21,11 @@ do
 	else
 		count=$(($count+1))
 		len=$(echo $line | awk -F "-" '{print $3}' | awk -F "\." '{print $1}' | wc -c)
-
+		
+		if [[ $line != *"*"* ]]
+		then
+			chosen_line=$line
+		fi
 
 		if [[ max_len -eq 0 ]]
 		then
