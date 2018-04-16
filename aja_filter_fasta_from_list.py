@@ -34,5 +34,5 @@ fasta_sequences = SeqIO.parse(open(args.fasta),'fasta')
 
 # open output file
 for record in fasta_sequences:
-    if record.description in delete_seqs:
+    if record.description not in delete_seqs:
     	print(record.format("fasta"))
