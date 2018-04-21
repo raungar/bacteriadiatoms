@@ -24,14 +24,13 @@ code used: community.matrices.R
 #### 1. Get all bacteria and archaea only (remove eukaryotes)
 code used: cat DadaOutputGG2/* | grep -v Bacteria |  awk -F'\t' '{print $1}' > ../aja_filter_from_bacterial_16S.list   
 cat DadaOutputGG2/* | grep -v Archaea |  awk -F'\t' '{print $1}' > aja_filter_from_archaea_16S.list    
-python aja_filter_fasta_from_list.py all.usearch.fasta aja_filter_from_bacteria_16S.list > archaea.all.fasta    
-python aja_filter_fasta_from_list.py all.usearch.fasta aja_filter_from_archaea_16S.list > bacteria.all.fasta   
+python aja_filter_fasta_from_list.py all.usearch.fasta aja_filter_from_bacteria_16S.list > bacteria.all.fasta    
+python aja_filter_fasta_from_list.py all.usearch.fasta aja_filter_from_archaea_16S.list > archaea.all.fasta   
 cat archaea.all.fasta bacteria.all.fasta > combined.all.fasta    
 #### 2. Reduce redundancy for tree via cd-hit
-code used: cdhit-4.6.8/cd-hit -i combined.all.fasta -o cdhitall -c 0.99     
-./elongate.name.sh > combined.all.named.fasta; cat combined.all.named.fixed.fasta | sed 's/'"${TAB}"'/-/g' | sed 's/ /_/g' > combined.all.named.fasta combined.all.named.fasta #last bit just fixes formatting for cd-hit    
-cdhit-4.6.8/cd-hit -i combined.all.named.fixed.fasta -o cdhitnamed -c 0.99 -d 500   
-25258  —>  14976 sequences     
+./elongate.name.sh > combined.all.named.fasta; 
+cdhit-4.6.8/cd-hit -i combined.all.named.fixed.fasta -o cdhits -c 0.99 -d 500   
+18232  —>  12819 sequences     
 #### 3. Use ssu-align
 code used: ssu-align combined.all.fasta BacteriaSSU   
 ssu-mask BacteriaSSU   
