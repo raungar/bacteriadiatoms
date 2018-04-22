@@ -30,8 +30,8 @@ cat archaea.all.fasta bacteria.all.fasta > combined.all.fasta
 #### 2. Reduce redundancy for tree via cd-hit
 ./elongate.name.sh > combined.all.named.fasta; #change headers to included dada2 names     
 cdhit-4.6.8/cd-hit -i combined.all.named.fixed.fasta -o cdhits -c 0.99 -d 500 #18232  —>  12819 sequences 
-python longest.in.cluster.python #make a headers file to record the longest name at a certain cluster     
-python editheaders.py #change fasta to include longest "truest" name      
+python longest.in.cluster.python > cdhits.header.txt #make a headers file to record the longest name at a certain cluster     
+python editheaders.py > final.cdhits.fasta #change fasta to include longest "truest" name      
 #### 3. Use ssu-align
 code used: ssu-align combined.all.fasta BacteriaSSU   
 ssu-mask BacteriaSSU   
