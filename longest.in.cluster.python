@@ -1,7 +1,9 @@
 #!/usr/bin/python
 import re
 
-d = {} #make dictionary
+d = {} #make dictionary for dada2 names
+d_diatoms = {} #this dictionary is for diatom name
+
 #change to relevant file name
 with open("cdhitnamed.clstr") as f:
 	for line in f:
@@ -11,8 +13,10 @@ with open("cdhitnamed.clstr") as f:
 		else:
 			name = re.split('>',line)[1]
 			d.setdefault(key, []).append(name)
-      #else it is the value
+			d_diatoms.setdefault(key, []).append(name)
 
+      #else it is the value
+#print the most detailed name, but attach it to the diatom name cd-hit chose as best
 for cluster, seqs in d.items():
 	max_seq_len=0
 	max_tax="NA"
@@ -29,4 +33,12 @@ for cluster, seqs in d.items():
 			chosen_header2 = seqsplit[1]
 			#printed name for the cluster to attach taxonomy to
 	print(chosen_header1,"<",chosen_header2,"<",max_tax,sep='')
+	
+#records all diatoms associated with a cluster
+for cluster_d, seqs_d in d_diatoms.items():
+        for the_seq_d in seqs:
+                seqsplit_d = re.split('<',the_seq_d)
+                seqs_d = seqsplit_d[1]
+        #print(cluster_d,seqs_d) #uncomment for future use for diatom names associated
+
 
