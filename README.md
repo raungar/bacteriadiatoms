@@ -13,7 +13,10 @@ code used: dada2.R submitted on the cluster via submit.dada2.pbs.
            were classified as "Bacteria" or less
 #### 4. Separate Archae/Bacteria for separate analyses
 code used: archae.sh
-#### 5. Make matrix needed for further analyses
+#### 5. Make matrix needed for further analyses (after ssu-align)
+cat ssu-cdhits/ssu-cdhits.*.fa | grep ">" > ssu-cdhits_headers.txt     
+awk -F "<" '{print $1, $2}' ssu-cdhits_headers.txt | cut -d ">" -f 2     
+reduce.matrix.sh     
 code used: make.matrix.sh and make.matrix.species.sh (get rid of specific diatoms: for file in $(ls *); do awk '$1 != "R2" && $1 != "R37"' $file > "removed.$file"; done)
 #### 5. Analyze using NMDS
 code used: community.matrices.R
