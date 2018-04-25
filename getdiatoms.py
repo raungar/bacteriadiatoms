@@ -29,4 +29,3 @@ with open("ssu-cdhits_headers.txt") as f:
 					#print(k)
 	
 					break
-		break
