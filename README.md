@@ -37,7 +37,7 @@ from Bio import AlignIO
 alignment = AlignIO.read("BacteriaSSU3/BacteriaSSU3.bacteria.mask.stk", "stockholm")    
 print(alignment.format("phylip-relaxed"))    
 #### 5. Community matrix development
-cat ssu-cdhits/ssu-cdhits.*fa | grep ">" | awk -F "<" '{print $1 "<" $2}' | cut -d ">" -f 2 > ssu-cdhits_headers.txt    
+cat ssu-cdhits/ssu-cdhits.bacteria.fa ssu-cdhits/ssu-cdhits.archaea.fa | grep ">" | awk -F "<" '{print $1 "<" $2}' | cut -d ">" -f 2 > ssu-cdhits_headers.txt    
 python getdiatoms.py > ssu-cdhits_diatom_headers.txt    
 python getdiatoms.py > ssu-cdhits_diatom_headers.txt    
 reduce.matrix.sh   
