@@ -41,6 +41,10 @@ cat ssu-cdhits/ssu-cdhits.bacteria.fa ssu-cdhits/ssu-cdhits.archaea.fa | grep ">
 python getdiatoms.py > ssu-cdhits_diatom_headers.txt    
 python getdiatoms.py > ssu-cdhits_diatom_headers.txt    
 reduce.matrix.sh   
+cat archaea.reduced.txt | sort -k2 > archaea.reduced.sort.txt; cat archaealess.reduced.txt | sort -k2 > archaealess.reduced.sort.txt       
+awk -F" " '{print>>$2}' archaea.reduced.sort.txt; awk -F" " '{print>>$2}' archaea.reduced.sort.txt       
+mkdir Diatoms # move files into diatoms besides the existing txt files     
+./make.matrix.sh    
 #### 6. Analyze using NMDS
 code used: community.matrices.R     
 #### 7. Make tree using FastTree
