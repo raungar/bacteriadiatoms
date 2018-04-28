@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for ArchaeType in ArchaealessSSU #ArchaealessSSU
+for ArchaeType in ArchaeaSSU ArchaealessSSU
 do
 
 if [ $ArchaeType == "ArchaeaSSU" ]
