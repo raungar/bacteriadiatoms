@@ -32,10 +32,11 @@ code used: ssu-align combined.all.fasta BacteriaSSU
 ssu-mask BacteriaSSU   
 ssu-mask --stk2afa BacteriaSSU   
 ssu-draw BacteriaSSU/   
-#### 4. Convert to ssu-align format
+#### 4. Convert to phylip for tree
 from Bio import AlignIO     
 alignment = AlignIO.read("BacteriaSSU3/BacteriaSSU3.bacteria.mask.stk", "stockholm")    
-print(alignment.format("phylip-relaxed"))    
+print(alignment.format("fasta"))    
+github.com/npchar/Phylogenomic/fasta2relaxedPhylip.pl -f infile -o outfile.phylip #convert to relaxed sequential
 #### 5. Community matrix development
 cat ssu-cdhits/ssu-cdhits.bacteria.fa ssu-cdhits/ssu-cdhits.archaea.fa | grep ">" | awk -F "<" '{print $1 "<" $2}' | cut -d ">" -f 2 > ssu-cdhits_headers.txt    
 python getdiatoms.py > ssu-cdhits_diatom_headers.txt    
@@ -48,6 +49,8 @@ mkdir Diatoms # move files into diatoms besides the existing txt files
 #### 6. Analyze using NMDS
 code used: community.matrices.R     
 #### 7. Make tree using FastTree
+head -1 test.fasta.phylip > rename.phylip; awk -v i=0 'NR>1 {print "D"i"  "$2; i=i+1}' outfile.phylip >> rename.phylip
+seqboot outfile.phylip
 FastTree -gtr -nt SSU2/SSU2.bacteria.mask.phylip > tree_bacteria_file    
 #### 8. Plot tree and analysis
 code used: picante.R    
