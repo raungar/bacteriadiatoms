@@ -36,9 +36,9 @@ for cluster, seqs in d.items():
 	
 #records all diatoms associated with a cluster
 for cluster_d, seqs_d in d_diatoms.items():
-        for the_seq_d in seqs:
-                seqsplit_d = re.split('<',the_seq_d)
-                seqs_d = seqsplit_d[1]
+	for the_seq_d in seqs:
+		seqsplit_d = re.split('-',the_seq_d)
+		seqs_d = seqsplit_d[1]
         #print(cluster_d,seqs_d) #uncomment for future use for diatom names associated
 
 
