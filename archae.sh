@@ -1,9 +1,9 @@
 #!/bin/bash
 
-for files in $(ls DadaOutputGG/) #edit for appropriate directory
+for files in $(ls DadaOutputGG3/)
 do
-	
-	cat "DadaOutputGG/$files" | grep "Archae" > "Archae/archae.$files"
-	cat "DadaOutputGG/$files" | grep -v "Archae" > "OutputArchaeless/archae.$files" #easy just grep -v to filter out other things in the future as needed
+
+        cat "DadaOutputGG3/$files" | sed "s/-/./g" | grep "Archae" > "Archae/archae.$files"
+        cat "DadaOutputGG3/$files" | sed "s/-/./g" | grep -v "Archae" > "Archaeless/archaeless.$files" #easy just grep -v to filter out other things $
 
 done
