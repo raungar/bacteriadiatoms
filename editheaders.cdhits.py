@@ -19,4 +19,4 @@ for fasta in fasta_sequences:
 			name=line
 			found="true"
 			break	
-	print(name,sequence,sep='')
+	print(">",name,sequence,sep='')
