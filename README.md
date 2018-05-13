@@ -3,25 +3,28 @@ Files and scripts used for Honors Thesis project
 
 ## __*Steps*__
 ### **taxonomy assignment**
-#### 1. Remove multiple isoforms . 
-(26806 -> 21377 sequences) . 
-code used: brianjohnhaas/trinityrnaseq/util/misc/get_longest_isoform_seq_per_trinity_gene.pl  .   
-mkdir DiatomIsoform #original files.  
-for files in $(ls /home/raungar/DiatomCopies/) .  
-do . 
+#### 1. Remove multiple isoforms    
+(26806 -> 21377 sequences)     
+code used: brianjohnhaas/trinityrnaseq/util/misc/get_longest_isoform_seq_per_trinity_gene.pl      
+mkdir DiatomIsoform #original files    
+for files in $(ls /home/raungar/DiatomCopies/)     
+do      
   	perl get_longest_isoform_seq_per_trinity_gene.pl "/home/raungar/DiatomCopies/$files" > "/home/raungar/DiatomIsoform/$files" #original files are in DiatomCopies   
-done .  
+done    
 
-#### 2. Remove redundant rRNA sequences via usearch . 
+#### 2. Remove redundant rRNA sequences via usearch     
 (21763 -> 21361 sequences)       
-mkdir DiatomUsearch . 
+mkdir DiatomUsearch     
 ./usearch.sh    
 #### 3. Use dada2 and BLAST to assign taxonomy
-mkdir DiatomDada .  
-dada2.R submitted on the cluster via submit.dada2.pbs. 
+mkdir DiatomDada      
+dada2.R submitted on the cluster via submit.dada2.pbs        
 #### 4. Remove anything with "chloroplast"
-(x -> y sequences)
-
+(21361 -> 20974 sequences)      
+mkdir DiatomNoChloroplast      
+for files in $(ls /home/raungar/DiatomDada);        
+do sed '/Chloroplast/d' /home/raungar/DiatomDada/$files > $files        
+done        
 #### 5. Separate Archae/Bacteria for separate analyses
 ./archae.sh
        
