@@ -1,13 +1,13 @@
 library("dada2")
 packageVersion("dada2")
 
-files<-system("ls /home/raungar/diatomdir_usearch/",intern=TRUE)
+files<-system("ls /home/raungar/DiatomUsearch/",intern=TRUE)
 #files<-files[206:278] #job wasn't long enough oops manually add rest of files
 
 for(filename in files){
 	print(filename)
 	file_header<-sub(pattern = "(.*)\\..*$", replacement = "\\1", basename(filename))	
-	seqs<-getSequences(paste0("/home/raungar/diatomdir_usearch/", filename))
+        seqs<-getSequences(paste0("/home/raungar/DiatomUsearch/", filename))
 
 	set.seed(100) # Initialize random number generator for reproducibility
 	
@@ -27,7 +27,7 @@ for(filename in files){
 	  }
 	}
 
-	newfilename<-paste0("/home/raungar/DadaOutputGG2/ggout.",file_header,".txt")
+	newfilename<-paste0("/home/raungar/DiatomDada/ggout.",file_header,".txt")
 	write.table(data.frame("name"=rownames(unname.gg.taxa.R21),unname.gg.taxa.R21),
         	    newfilename,
         	    row.names=FALSE, col.names=FALSE, sep="\t",quote=FALSE)
