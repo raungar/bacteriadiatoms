@@ -1,11 +1,17 @@
 #!/usr/bin/python
 import re
+import argparse
 
 d = {} #make dictionary for dada2 names
 d_diatoms = {} #this dictionary is for diatom name
 
+parser = argparse.ArgumentParser()
+parser.add_argument( "clstr", help="name of clstr file" )
+args = parser.parse_args()
+
+
 #change to relevant file name
-with open("cdhitnamed.clstr") as f:
+with open(args.clstr,'r') as f:
 	for line in f:
 		if ">Cluster" in line:
 			key = line
@@ -21,7 +27,7 @@ for cluster, seqs in d.items():
 	max_seq_len=0
 	max_tax="NA"
 	for the_seq in seqs:
-		seqsplit = re.split('-',the_seq)
+		seqsplit = re.split('<',the_seq)
 		tax = re.split('\.\.\.',seqsplit[2])
 		if len(tax[0]) > max_seq_len:
 			max_seq_len=len(tax[0])
@@ -37,7 +43,7 @@ for cluster, seqs in d.items():
 #records all diatoms associated with a cluster
 for cluster_d, seqs_d in d_diatoms.items():
 	for the_seq_d in seqs:
-		seqsplit_d = re.split('-',the_seq_d)
+		seqsplit_d = re.split('<',the_seq_d)
 		seqs_d = seqsplit_d[1]
         #print(cluster_d,seqs_d) #uncomment for future use for diatom names associated
 
