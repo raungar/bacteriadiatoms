@@ -25,13 +25,20 @@ mkdir DiatomNoChloroplast
 for files in $(ls /home/raungar/DiatomDada);        
 do sed '/Chloroplast/d' /home/raungar/DiatomDada/$files > $files        
 done        
+#### 5. Fix file names
+cd DiatomNoChloroplast/; for i in *; do mv "$i" "`echo 2$i | sed "s/-/./g"`"; done; #fixes file names, since some have "-" in them, which is a problem later                   
+for files in $(ls /home/raungar/DiatomNoChloroplast/)     
+do  
+    newfile=`echo $files | cut -c2- `
+  	cat $files | sed "s/-/./g" > $newfile;
+done      
+rm 2* # remove your previous files     
 #### 5. Separate Archae/Bacteria for separate analyses
 ./archae.sh
        
 
 ### **bacterial tree formation**
 #### 1. Get all bacteria and archaea only (remove eukaryotes)
-cd DadaOutputGG2/; for i in *; do mv "$i" "`echo $i | sed "s/-/./g"`"; done; cd.. ; cd diatomdir_usearch;  for i in *; do mv "$i" "`echo $i | sed "s/-/./g"`"; done; #fixes file names, since some have "-" in them, which is a problem later. I did it in DadaOutputGG3 to test . 
 cat diatomdir_usearch/* | sed "s/-/./g" > all.usearch.fasta    
 code used: cat DadaOutputGG2/* | grep -v Bacteria | sed "s/-/./g"| awk -F'\t' '{print $1}' > aja_filter_from_bacteria_16S.list    
 cat DadaOutputGG2/* | grep -v Archaea | sed "s/-/./g" |  awk -F'\t' '{print $1}' > aja_filter_from_archaea_16S.list    
