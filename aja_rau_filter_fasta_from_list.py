@@ -12,27 +12,26 @@ parser = argparse.ArgumentParser()
 
 # add arguments
 parser.add_argument( "fasta", help="name of FASTA file" )
-parser.add_argument( "remove_list", help="name of file with list of sequences to remove" )
+parser.add_argument( "keep_list", help="name of file with list of sequences to keep" )
 
 args = parser.parse_args()
 
-delete_seqs = []
+keep_seqs = []
 
 # open and parse file with list of sequences to exclude
-exclude_file = open( args.remove_list, 'r' )
+keep_file = open( args.keep_list, 'r' )
 
-for line in exclude_file:
-    delete_seqs.append(line.rstrip())
+for line in keep_file:
+    keep_seqs.append(line.rstrip())
 
 # close list file
-exclude_file.close()
+keep_file.close()
 
 
-# open and parse file1 (FASTA file that we're filtering contaminants from)
+# open and parse file1 (FASTA file that we're keeping sequences from)
 fasta_sequences = SeqIO.parse(open(args.fasta),'fasta')
-
 
 # open output file
 for record in fasta_sequences:
-    if record.description not in delete_seqs:
+    if record.description in keep_seqs:
     	print(record.format("fasta"))
