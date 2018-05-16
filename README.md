@@ -21,6 +21,10 @@ for files in $(ls /home/raungar/DiatomRenamed/);
 do      
   	perl get_longest_isoform_seq_per_trinity_gene.pl "/home/raungar/DiatomRenamed/$files" > "/home/raungar/DiatomIsoform/$files" #original files are in DiatomCopies ;  
 done
+       
+cat DiatomRenamed/* | grep ">" | sort  > diatomcopies.txt        
+cat DiatomIsoform/* | grep ">" | sort > diatomisoform.txt  
+comm -23 diatomcopies.txt diatomisoform.txt > diatomcopies2isoform.removed.txt     #files removed
 #### 3. Use dada2 to assign taxonomy
 mkdir DiatomDada      
 dada2.R submitted on the cluster via submit.dada2.pbs        
