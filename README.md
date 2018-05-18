@@ -29,7 +29,7 @@ comm -23 diatomcopies.txt diatomisoform.txt > diatomcopies2isoform.removed.txt  
 mkdir DiatomDada      
 dada2.R submitted on the cluster via submit.dada2.pbs        
 #### 4. Remove anything with "chloroplast" or "mitochondria"
-(21377 -> 20974 sequences)      
+(21377 -> 19347 sequences)      
 mkdir DiatomNoChloroplast      
 for files in $(ls /home/raungar/DiatomDada);        
 do sed '/Chloroplast/d; /mitochondria/d' /home/raungar/DiatomDada/$files > $files        
@@ -39,14 +39,15 @@ done
 
 ### **bacterial tree formation** 
 #### 1. Reduce redundancy for tree via cd-hit
-(17503 —> 12416 sequences)      
-cat DiatomDada/ggout* | sed "s/-/./g" > dadaoutput.txt         
+(19347 —> 13369 sequences)      
+cat DiatomNoCM/* | sed "s/-/./g" > dadaoutput.txt     
+cat DiatomIsoform/* > combine.all.fasta
 python elongate.name.python > combined.all.named.fasta; #change headers to included dada2 names, takes dadaoutput.txt       
 cdhit-4.6.8/cd-hit -i combined.all.named.fasta -o cdhits -c 0.99 -d 500 
 python longest.in.cluster.python > cdhits.header.txt #make a headers file to record the longest name at a certain cluster     
 python editheaders.cdhits.py > final.cdhits.fasta #change fasta to include longest "truest" name      
 #### 2. Use ssu-align
-(12416 —> 9075 sequences)      
+(12416 —> XXXX sequences)      
 code used: ssu-align final.cdhits.fasta ssu-cdhits   
 ssu-mask ssu-cdhits    
 ### 3. Convert to phylip for tree
