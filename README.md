@@ -47,15 +47,19 @@ cdhit-4.6.8/cd-hit -i combined.all.named.fasta -o cdhits -c 0.99 -d 500
 python longest.in.cluster.python > cdhits.header.txt #make a headers file to record the longest name at a certain cluster     
 python editheaders.cdhits.py > final.cdhits.fasta #change fasta to include longest "truest" name      
 #### 2. Use ssu-align
-(12416 —> XXXX sequences)      
+(12416 —> 9478 bacteria and 31 archaea sequences)      
 code used: ssu-align final.cdhits.fasta ssu-cdhits   
 ssu-mask ssu-cdhits    
 ### 3. Convert to phylip for tree
 from Bio import AlignIO     
-alignment = AlignIO.read("BacteriaSSU3/BacteriaSSU3.bacteria.mask.stk", "stockholm")    
-print(alignment.format("fasta"))    
-github.com/npchar/Phylogenomic/fasta2relaxedPhylip.pl -f infile -o outfile.phylip #convert to relaxed sequential
-#### 4. Community matrix development
+alignment = AlignIO.read("ssu-cdhits/ssu-cdhits.archaea.mask.stk", "stockholm")    
+print(alignment.format("phylip-relaxed"))
+#### 4. Create partition file
+./convert_WUSS_to_partition.sh ssu_align.eukarya.mask.stk 0 > ssu_align.eukarya.mask.charsets.raxml
+#### 5. Make tree using FastTree
+head -1 test.fasta.phylip > rename.phylip; awk -v i=0 'NR>1 {print "D"i"  "$2; i=i+1}' outfile.phylip >> rename.phylip
+seqboot outfile.phylip
+#### 6. Community matrix development
 ./archae.sh # Separate Archae/Bacteria for separate analyses          
 cat ssu-cdhits.archaea.mask.fasta ssu-cdhits.bacteria.mask.fasta | grep ">" | awk -F "<" '{print $1 "<" $2}' | cut -d ">" -f 2 > ssu-cdhits_headers.txt      
 python getdiatoms.py > ssu-cdhits_diatom_headers.txt      
@@ -63,11 +67,8 @@ reduce.matrix.sh
 cd ArchaeaSSU; cat archaea.reduced.txt | sort -k2 > archaea.reduced.sort.txt; mkdir Diatoms; cd Diatoms; awk -F" " '{print>>$2}' ../archaea.reduced.sort.txt;    
 cd ArchaealessSSU; cat archaealess.reduced.txt | sort -k2 > archaealess.reduced.sort.txt; mkdir Diatoms; cd Diatoms; awk -F" " '{print>>$2}' ../archaealess.reduced.sort.txt;    
 ./make.matrix.sh    
-#### 5. Analyze using NMDS
+#### 7. Analyze using NMDS
 code used: community.matrices.R     
-#### 6. Make tree using FastTree
-head -1 test.fasta.phylip > rename.phylip; awk -v i=0 'NR>1 {print "D"i"  "$2; i=i+1}' outfile.phylip >> rename.phylip
-seqboot outfile.phylip
 FastTree -gtr -nt SSU2/SSU2.bacteria.mask.phylip > tree_bacteria_file    
-#### 7. Plot tree and analysis
+#### 8. Plot tree and analysis
 code used: picante.R    
