@@ -55,10 +55,11 @@ from Bio import AlignIO
 alignment = AlignIO.read("ssu-cdhits/ssu-cdhits.archaea.mask.stk", "stockholm")    
 print(alignment.format("phylip-relaxed"))
 #### 4. Create partition file
-./convert_WUSS_to_partition.sh ssu_align.eukarya.mask.stk 0 > ssu_align.eukarya.mask.charsets.raxml
-#### 5. Make tree using FastTree
-head -1 test.fasta.phylip > rename.phylip; awk -v i=0 'NR>1 {print "D"i"  "$2; i=i+1}' outfile.phylip >> rename.phylip
-seqboot outfile.phylip
+./convert_WUSS_to_partition.sh ssu_align.bacteria.mask.stk 0 > ssu_align.bacteria.mask.charsets.raxml
+./convert_WUSS_to_partition.sh ssu_align.archaea.mask.stk 0 > ssu_align.archaea.mask.charsets.raxml
+#### 5. Make tree using RAxML
+./a.raxml.sh
+./b.raxml.sh #same as above, just bacteria version
 #### 6. Community matrix development
 ./archae.sh # Separate Archae/Bacteria for separate analyses          
 cat ssu-cdhits.archaea.mask.fasta ssu-cdhits.bacteria.mask.fasta | grep ">" | awk -F "<" '{print $1 "<" $2}' | cut -d ">" -f 2 > ssu-cdhits_headers.txt      
