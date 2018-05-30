@@ -62,10 +62,10 @@ print(alignment.format("phylip-relaxed"))
 ./b.raxml.sh #same as above, just bacteria version
 #### 6. Community matrix development
 ./archae.sh # Separate Archae/Bacteria for separate analyses          
-cat ssu-cdhits.archaea.mask.fasta ssu-cdhits.bacteria.mask.fasta | grep ">" | awk -F "<" '{print $1 "<" $2}' | cut -d ">" -f 2 > ssu-cdhits_headers.txt      
-python getdiatoms.py > ssu-cdhits_diatom_headers.txt      
+cat b.raxml/ssu-cdhits.masked.bateria.phy | grep "TRINITY" | awk -F"<" '{print $1"<"$2}' > ssu-cdhits_headers_bac.txt     
+cat a.raxml/ssu-cdhits.masked.archaea.phy | grep "TRINITY" | awk -F"<" '{print $1"<"$2}' > ssu-cdhits_headers_arc.txt    
 reduce.matrix.sh    
-cd ArchaeaSSU; cat archaea.reduced.txt | sort -k2 > archaea.reduced.sort.txt; mkdir Diatoms; cd Diatoms; awk -F" " '{print>>$2}' ../archaea.reduced.sort.txt;    
+cd Archaea; cat archaea.reduced.txt | sort -k2 > archaea.reduced.sort.txt; mkdir Diatoms; cd Diatoms; awk -F" " '{print>>$2}' ../archaea.reduced.sort.txt;    
 cd ArchaealessSSU; cat archaealess.reduced.txt | sort -k2 > archaealess.reduced.sort.txt; mkdir Diatoms; cd Diatoms; awk -F" " '{print>>$2}' ../archaealess.reduced.sort.txt;    
 ./make.matrix.sh    
 #### 7. Analyze using NMDS
