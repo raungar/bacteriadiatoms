@@ -1,62 +1,69 @@
 #!/bin/bash
 
-
-#make sure and run archae.sh before
-for ArchaeType in ArchaeaSSU ArchaealessSSU
+for ArchaeType in Archaealess Archaea
 do
-num=5 #this is which column will be awk-ed for order/family/genus/species
-for level in order family genus species
+
+if [ $ArchaeType == "Archaea" ]
+then
+	arc="archaea"
+else
+	arc="archaealess"
+fi
+
+num=5
+
+for level in species
 do
 	echo "$ArchaeType - $level"
-	num=`expr $num + 1` #change taxonomic level
-	awk -v num="$num" '{print $num}' $ArchaeType/* | sed '1d' | sort -u > MatrixOutputSSU/bac.cols.$ArchaeType.$level.txt #get all unique tax ids in level
-	printf "bacteria\t" > MatrixOutputSSU/matrix.$ArchaeType.$level.txt
-	awk -vRS="\n" -vORS="\t" '1' MatrixOutputSSU/bac.cols.$ArchaeType.$level.txt >> MatrixOutputSSU/matrix.$ArchaeType.$level.txt #print uniq tax ids tab delimited
-	printf "\n" >> MatrixOutputSSU/matrix.$ArchaeType.$level.txt 
-	#this section creates the header of the matrix
-	
+	num=`expr $num + 1`
+	#num1=$num
+	#num2=`expr $num1 + 1`
+	#num3=`expr $num2 + 1`
+	#num4=`expr $num3 + 1`
+	awk '{print $3"_"$4"_"$5"_"$6"_"$7"_"$8"_"$9"_"$10}' $ArchaeType/Diatoms/* | sed '1d' | sort -u > MatrixOutput/bac.cols.$ArchaeType.$level.txt
+	printf "NA_NA_NA_NA\n" >>  MatrixOutput/bac.cols.$ArchaeType.$level.txt
 
-	for file in $(ls $ArchaeType/)
+
+	printf "bacteria\t" > MatrixOutput/matrix.$ArchaeType.$level.txt
+	awk -vRS="\n" -vORS="\t" '1' MatrixOutput/bac.cols.$ArchaeType.$level.txt >> MatrixOutput/matrix.$ArchaeType.$level.txt
+	printf "\n" >> MatrixOutput/matrix.$ArchaeType.$level.txt
+
+
+
+	for file in $(ls "$ArchaeType/Diatoms/")
 	do
-		header=`echo $file | rev | cut -c18- | rev | cut -d'/' -f5 | cut -d '.' -f3-` #grab diatom name
-		
 		#source for next line: https://www.unix.com/shell-programming-and-scripting/73557-awk-hash-function.html
-		#this next line makes a hash and then outputs 2 columns: one with the tax id and one with the count
-		awk -v num1=$num1 -v num2=$num2 -v num3=$num3 '{cnt[$num1 " " $num2 " " $num3]+=1}END{for (x in cnt){print x,cnt[x]}}' $ArchaeType/$file | sort > hash.temp.txt
+		#this next line makes the hash and saves it in a file
+		awk '{cnt[$3"_"$4"_"$5"_"$6"_"$7"_"$8"_"$9"_"$10]+=1}END{for (x in cnt){print x,cnt[x]}}' "$ArchaeType/Diatoms/$file" | sort > hash.temp.txt
+		
+		header=`echo $file` # | awk -F"_" '{print $1}'`
 		printf "$header\t"
 
-		#read col name (tax id), then looks to see if that tax id is in hash file
-		#if it is, print count, if not print zero
 		while read cols
 		do
-  			count=0
-			
-			#this reads through hash file
+			count=0
 			while read line
         		do
-          			line1=$(echo $line | cut -d ' ' -f 1,2,3) #name of tax id
-                		line2=$(echo $line | cut -d ' ' -f 4) #count of tax id
-				isna=$($(echo $line | cut -d ' ' -f 3) #species is NA
-				
-				if [ $isna == "NA" ]
-				then
-					
-				else
-        	        		if [ "$line1" == "$cols" ]
-                			then
-                		    		count=$line2 
-                			fi
-				fi
+
+			
+			  	line1=$(echo $line | cut -d ' ' -f 1) #name of tax id
+                                line2=$(echo $line | cut -d ' ' -f 2) #count of tax id
+                                
+				if [ "$line1" == "$cols" ]
+                                then
+                                        count=$line2
+                                fi
 
         		done <hash.temp.txt
 
-        		printf  "$count\t" #nothing found: prints zero, found: print number from file 
+        		printf  "$count\t"
 
-		done <MatrixOutputSSU/bac.cols.$ArchaeType.$level.txt
+		done <MatrixOutput/bac.cols.$ArchaeType.$level.txt
 		echo ""
-		rm hash.temp.txt
-	done >> MatrixOutputSSU/matrix.$ArchaeType.$level.txt
+		#rm hash.temp.txt
 
+
+	done >> MatrixOutput/matrix.$ArchaeType.$level.txt
 done
 
 done
