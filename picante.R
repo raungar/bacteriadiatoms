@@ -1,49 +1,41 @@
 library(picante)
-	#library(seqinr)
-	#library(ape)
-	
-
-	community<-read.table("/Users/labuser/Documents/Diatoms/matrix.ArchaeaSSU.species.txt",
-	                      header=T,row.names = 1,stringsAsFactors = F)
-	#traits$Temperature[86]<-25.5 #you can change... but dumb dash
-	community<-community[!!rowSums(abs(community)),]
-	colnames(community)[5]<-c("WCHD3-30_NA_NA_NA")
-	community["NA_NA_NA_NA"]<-0
-	traits<-traits[c(rownames(traits)),]
-	comm<-decostand(community,method = "total")
-	phy.arc<-read.tree(file="/Users/labuser/Documents/Diatoms/Archaea.13/RAxML_bestTree.archaea")
-	original.label<-sapply(strsplit(phy.arc$tip.label, "<"), 
-	                       function(x){paste( x[[1]], x[[2]], sep=" ")})
-  tiptemp<-sapply(strsplit(phy.arc$tip.label,"<"), "[[", 3)
-	phy.arc$tip.label<-sapply(strsplit(tiptemp, "_"), 
-	                          function(x){paste( x[[4]], x[[5]], x[[6]], x[[7]],  sep="_")})
-
-	# aless.species<-phy.bac$tip.label
-	for(i in 1:length(phy.arc$tip.label)){
-	  temp.arc<-system(paste0("cat /Users/labuser/Documents/Diatoms/archaea.classification.txt | grep \"", 
-	                              original.label[i],"\" | awk '{print $5}'") ,intern=TRUE) #change $5 , this is for family
-	  #if(identical(temp.arc,character(0))){phy.arc$tip.label[i]<-c("NA.")}else{phy.arc$tip.label<-temp.arc}
-	  #phy$tip.label<-substring(phy$tip.label, 4)
-	}
-	
 
 
-	plot(phy.arc,cex=0.5)
-	phy.bac$tip.label<-a.genus
-	plot(phy.bac,cex=0.5)
+community.bac<-read.table("MatrixOutputExt1/matrix.Archaealess.species.txt",
+                          header=T,row.names = 1,stringsAsFactors = F)
+#traits$Temperature[86]<-25.5 #you can change... but dumb dash
+community.bac<-community.bac[!!rowSums(abs(community.bac)),]
+colnames(community.bac)<-gsub("?\\._\\.","_",colnames(community.bac))
+colnames(community.bac)<-gsub("?_\\.","_",colnames(community.bac))
+colnames(community.bac)<-gsub("?\\._","_",colnames(community.bac))
+colnames(community.bac)<-gsub("X\\.","",colnames(community.bac))
 
-	
-	NRI.b.o<-ses.mpd(community, cophenetic(phy.arc), null.model = "taxa.labels")
-	NTI.b.o<-ses.mntd(community, cophenetic(phy.arc),null.model="taxa.labels")
-	ses.mpd<-ses.mpd((community), cophenetic(phy.arc),null.model="taxa.labels")
-	ses.mntd<-ses.mntd((community), cophenetic(phy.arc),null.model="taxa.labels")
-	
-	
-	commdist<-comdist(community,cophenetic(phy.arc))
-	comdist.clusters <- hclust(commdist)	
-	plot(comdist.clusters)
+comm.bac<-decostand(community.bac,method = "total")
+comm.bac<-comm.bac[ , -which(names(comm.bac) %in% c("NA_NA_NA_NA"))]
 
-	
-	#NEED TO UPLOAD TRAITS
-	multiPhylosignal(traits[phy.arc$tip.label,],phy.arc)	
-	
+
+phy.bac<-read.tree(file="b.raxml/Bacteria.9/RAxML_bestTree.raxml.bacteria.9")
+original.label<-sapply(strsplit(phy.bac$tip.label, "<"), 
+                       function(x){paste( x[[1]], x[[2]], sep=" ")})
+phy.bac$tip.label<-sapply(strsplit(phy.bac$tip.label,"<"), "[[", 3)
+
+
+pruned.comm.bac<-community.bac[,colnames(community.bac)[colnames(community.bac) %in% unique(phy.bac$tip.label)]]
+
+cop.phy.bac<-cophenetic(phy.bac)
+write.table(cop.phy.bac,"cop.phy.bac9.txt", sep="\t")
+
+
+NRI.bac<-ses.mpd(pruned.comm.bac, cop.phy.bac, null.model = "taxa.labels")
+write.table(NRI.bac,"NRI.bac9.txt", sep="\t")
+NTI.bac<-ses.mntd(pruned.comm.bac, cop.phy.bac,null.model="taxa.labels")
+write.table(NTI.bac,"NTI.bac9.txt", sep="\t")
+ses.mpd.bac<-ses.mpd((pruned.comm.bac), cop.phy.bac,null.model="taxa.labels")
+write.table(ses.mpd.bac,"ses.mpd.bac9.txt", sep="\t")
+ses.mntd.bac<-ses.mntd((pruned.comm.bac),cop.phy.bac,null.model="taxa.labels")
+write.table(ses.mntd.bac,"ses.mntd.bac9.txt", sep="\t")
+
+commdist.bac<-comdist(pruned.comm.bac,cop.phy.bac)
+comdist.bac.clusters <- hclust(commdist.bac)	
+comdist.bac.clusters$labels<-sapply(strsplit(comdist.bac.clusters$labels,"_"), "[[", 1)
+write.tree(as.phylo(comdist.bac.clusters),"comdist.bac.clusters9.tree")
