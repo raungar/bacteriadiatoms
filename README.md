@@ -67,9 +67,7 @@ cat a.raxml/ssu-cdhits.masked.archaea.phy | grep "TRINITY" | awk -F"<" '{print $
 reduce.matrix.sh    
 cd Archaea; cat archaea.reduced.txt | sort -k2 > archaea.reduced.sort.txt; mkdir Diatoms; cd Diatoms; awk -F" " '{print>>$2}' ../archaea.reduced.sort.txt;    
 cd ArchaealessSSU; cat archaealess.reduced.txt | sort -k2 > archaealess.reduced.sort.txt; mkdir Diatoms; cd Diatoms; awk -F" " '{print>>$2}' ../archaealess.reduced.sort.txt;    
-./make.matrix.sh    
-#### 7. Analyze using NMDS
-code used: community.matrices.R     
-FastTree -gtr -nt SSU2/SSU2.bacteria.mask.phylip > tree_bacteria_file    
-#### 8. Plot tree and analysis
-code used: picante.R    
+./make.matrix.sh and ./make.matrix.species.sh     
+#### 7. Plot tree and analysis
+code used: picante.R     
+picante.phylodiversitysignal.R
