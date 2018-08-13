@@ -48,18 +48,34 @@ python longest.in.cluster.python > cdhits.header.txt #make a headers file to rec
 python editheaders.cdhits.py > final.cdhits.fasta #change fasta to include longest "truest" name      
 #### 2. Use ssu-align
 (12416 —> 9478 bacteria and 31 archaea sequences)      
-code used: ssu-align final.cdhits.fasta ssu-cdhits   
-ssu-mask ssu-cdhits    
+code used: cat ssu-cdhits/ssu-cdhits.archaea.ifile | grep TRINITY | awk '{print $1}' > archaea.search     
+grep -A 1 -F -f archaea.search cdhits.copy | grep -v -- "^--$" > archaea.cdhits.cut    
+ssu-cdhits/ssu-cdhits.bacteria.ifile | grep TRINITY | awk '{print $1}' > bacteria.search     
+grep -A 1 -F -f bacteria.search cdhits.copy | grep -v -- "^--$" > bacteria.cdhits.cut 
+cat archaea.cdhits.cut bacteria.cdhits.cut gg_13_8_train_set_97.fa > gg.cdhits.fasta            
+awk -v x=0 '{if($0 ~ />.*/){x=x+1; print ">s"x} else {print $0}}' gg.cdhits.fasta > gg.cdhits.count.fasta       
+awk -v x=0 '{if($0 ~ />.*/){x=x+1; print ">s"x"\t"$0}}' gg.cdhits.copy.fasta > record.gg.cdhits.txt
+    
+ssu-prep -x gg.cdhits.count.fasta gg.cdhits2.all 125       
+./gg.cdhits2.all.ssu-align.sh    
+
+
+
+
 ### 3. Convert to phylip for tree
-from Bio import AlignIO     
-alignment = AlignIO.read("ssu-cdhits/ssu-cdhits.archaea.mask.stk", "stockholm")    
-print(alignment.format("phylip-relaxed"))
+python stk2phy.py gg.cdhits2.all.bacteria.mask.stk > gg.cdhits2.all.bacteria.mask.phy     
+python stk2phy.py gg.cdhits2.all.archaea.mask.stk > gg.cdhits2.all.archaea.mask.phy       
+
 #### 4. Create partition file
-./convert_WUSS_to_partition.sh ssu_align.bacteria.mask.stk 0 > ssu_align.bacteria.mask.charsets.raxml
-./convert_WUSS_to_partition.sh ssu_align.archaea.mask.stk 0 > ssu_align.archaea.mask.charsets.raxml
+./convert_WUSS_to_partition.sh ssu_align.bacteria.mask.stk 0 > ssu_align.bacteria.mask.charsets.raxml     
+./convert_WUSS_to_partition.sh ssu_align.archaea.mask.stk 0 > ssu_align.archaea.mask.charsets.raxml      
 #### 5. Make tree using RAxML
-./a.raxml.sh
-./b.raxml.sh #same as above, just bacteria version
+.\# Teo makes reference trees
+raxmlHPC-SSE3 -m GTRCAT -f v -s gg.cdhits.all2.bacteria.mask.phy -t bacteria_ref_teo.tre -n raxml_placements_bac     
+raxmlHPC-SSE3 -m GTRCAT -f v -s gg.cdhits.all2.archaea.mask.phy -t archaea_ref_teo.tre -n raxml_placements_bac     
+
+
+
 #### 6. Community matrix development
 ./archae.sh # Separate Archae/Bacteria for separate analyses          
 cat b.raxml/ssu-cdhits.masked.bateria.phy | grep "TRINITY" | awk -F"<" '{print $1"<"$2}' > ssu-cdhits_headers_bac.txt     
