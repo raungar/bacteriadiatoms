@@ -70,7 +70,7 @@ python stk2phy.py gg.cdhits2.all.archaea.mask.stk > gg.cdhits2.all.archaea.mask.
 ./convert_WUSS_to_partition.sh ssu_align.bacteria.mask.stk 0 > ssu_align.bacteria.mask.charsets.raxml     
 ./convert_WUSS_to_partition.sh ssu_align.archaea.mask.stk 0 > ssu_align.archaea.mask.charsets.raxml      
 #### 5. Make tree using RAxML
-.\# Teo makes reference trees
+\# Teo makes reference trees        
 raxmlHPC-SSE3 -m GTRCAT -f v -s gg.cdhits.all2.bacteria.mask.phy -t bacteria_ref_teo.tre -n raxml_placements_bac     
 raxmlHPC-SSE3 -m GTRCAT -f v -s gg.cdhits.all2.archaea.mask.phy -t archaea_ref_teo.tre -n raxml_placements_bac     
 
@@ -85,5 +85,5 @@ cd Archaea; cat archaea.reduced.txt | sort -k2 > archaea.reduced.sort.txt; mkdir
 cd ArchaealessSSU; cat archaealess.reduced.txt | sort -k2 > archaealess.reduced.sort.txt; mkdir Diatoms; cd Diatoms; awk -F" " '{print>>$2}' ../archaealess.reduced.sort.txt;    
 ./make.matrix.sh and ./make.matrix.species.sh     
 #### 7. Plot tree and analysis
-code used: picante.R     
-picante.phylodiversitysignal.R
+code used: picante.R (NRI/NTI/MPD/MNTD/cluster dendogram)    
+picante.phylodiversitysignal.R (K-statistic/PSV/PSC/PSR/PSE/SR)
